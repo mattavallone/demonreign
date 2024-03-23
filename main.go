@@ -20,7 +20,7 @@ const (
 var (
 	playerX      = 0
 	playerY      = 0
-	mapSize      = 10
+	mapSize      = 20
 	gameMap      = make([][]int, mapSize)
 	moveCooldown = 0
 )
@@ -88,6 +88,9 @@ func draw(screen *ebiten.Image) {
 }
 
 func main() {
+	ebiten.SetWindowTitle("Demon Reign")
+	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
+
 	if err := ebiten.RunGame(&Game{}); err != nil {
 		log.Fatal(err)
 	}
