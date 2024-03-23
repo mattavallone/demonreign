@@ -88,6 +88,7 @@ func draw(screen *ebiten.Image) {
 }
 
 func main() {
+	ebiten.SetWindowSize(screenWidth*2, screenHeight*2)
 	ebiten.SetWindowTitle("Demon Reign")
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 
