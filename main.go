@@ -44,25 +44,25 @@ func update(screen *ebiten.Image) error {
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
-		if playerY > 0 {
+		if playerY > 0 && gameMap[playerY-1][playerX] != 1 {
 			playerY--
 		}
 		moveCooldown = moveDelay
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
-		if playerY < mapSize-1 {
+		if playerY < mapSize-1 && gameMap[playerY+1][playerX] != 1 {
 			playerY++
 		}
 		moveCooldown = moveDelay
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
-		if playerX > 0 {
+		if playerX > 0 && gameMap[playerY][playerX-1] != 1 {
 			playerX--
 		}
 		moveCooldown = moveDelay
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
-		if playerX < mapSize-1 {
+		if playerX < mapSize-1 && gameMap[playerY][playerX+1] != 1 {
 			playerX++
 		}
 		moveCooldown = moveDelay
