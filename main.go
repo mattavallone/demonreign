@@ -1,90 +1,57 @@
 package main
 
 import (
-	"image/color"
+	"image"
 	"log"
-	"math/rand"
-	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/yohamta/ganim8/v2"
 )
 
 const (
 	screenWidth  = 640
 	screenHeight = 480
-	tileSize     = 32
-	moveDelay    = 10 // Adjust this value to change the speed of the player
+	tileSize     = 16
+	mapSize      = 16
 )
 
 var (
-	playerX      = 0
-	playerY      = 0
-	mapSize      = 20
-	gameMap      = make([][]int, mapSize)
 	moveCooldown = 0
+
+	floorsImage *ebiten.Image
+	wallsImage  *ebiten.Image
+
+	gameMap = [][]int{
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0},
+		{0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0},
+		{0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0},
+		{0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+		{0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0},
+		{0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0},
+		{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0},
+		{0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+		{0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0},
+		{0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	}
 )
 
 func init() {
-	rand.New(rand.NewSource(time.Now().UnixNano()))
-	for i := range gameMap {
-		gameMap[i] = make([]int, mapSize)
-		for j := range gameMap[i] {
-			gameMap[i][j] = rand.Intn(2)
-		}
+	var err error
+	floorsImage, _, err = ebitenutil.NewImageFromFile("assets/atlas_floor-16x16.png")
+	if err != nil {
+		log.Fatal(err)
 	}
-	playerX = rand.Intn(mapSize)
-	playerY = rand.Intn(mapSize)
-}
-
-func update(screen *ebiten.Image) error {
-	if moveCooldown > 0 {
-		moveCooldown--
-		return nil
+	wallsImage, _, err = ebitenutil.NewImageFromFile("assets/atlas_walls_low-16x16.png")
+	if err != nil {
+		log.Fatal(err)
 	}
-
-	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
-		if playerY > 0 && gameMap[playerY-1][playerX] != 1 {
-			playerY--
-		}
-		moveCooldown = moveDelay
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
-		if playerY < mapSize-1 && gameMap[playerY+1][playerX] != 1 {
-			playerY++
-		}
-		moveCooldown = moveDelay
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
-		if playerX > 0 && gameMap[playerY][playerX-1] != 1 {
-			playerX--
-		}
-		moveCooldown = moveDelay
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
-		if playerX < mapSize-1 && gameMap[playerY][playerX+1] != 1 {
-			playerX++
-		}
-		moveCooldown = moveDelay
-	}
-
-	return nil
-}
-
-func draw(screen *ebiten.Image) {
-	screen.Fill(color.RGBA{0, 0, 0, 255})
-	for i := range gameMap {
-		for j := range gameMap[i] {
-			var c color.Color
-			if gameMap[i][j] == 0 {
-				c = color.RGBA{255, 255, 255, 255}
-			} else {
-				c = color.RGBA{0, 0, 255, 255}
-			}
-			vector.DrawFilledRect(screen, float32(j*tileSize), float32(i*tileSize), tileSize, tileSize, c, false)
-		}
-	}
-	vector.DrawFilledRect(screen, float32(playerX*tileSize), float32(playerY*tileSize), tileSize, tileSize, color.RGBA{255, 0, 0, 255}, false)
 }
 
 func main() {
@@ -92,21 +59,111 @@ func main() {
 	ebiten.SetWindowTitle("Demon Reign")
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 
-	if err := ebiten.RunGame(&Game{}); err != nil {
+	g := &Game{
+		player: NewPlayer(),
+	}
+
+	LoadPlayerImage(g.player)
+
+	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)
 	}
 }
 
-type Game struct{}
-
-func (g *Game) Update() error {
-	return update(nil)
+type Game struct {
+	player *gamePlayer
 }
 
-func (g *Game) Draw(screen *ebiten.Image) {
-	draw(screen)
+func (g *Game) Update() error {
+	if moveCooldown > 0 {
+		moveCooldown--
+		return nil
+	}
+
+	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
+		if g.player.y > 0 && gameMap[g.player.y-1][g.player.x] != 1 {
+			g.player.y--
+		}
+		moveCooldown = g.player.moveDelay
+
+		g.player.animInstance = g.player.walky
+		g.player.animInstance.Update()
+
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
+		if g.player.y < mapSize-1 && gameMap[g.player.y+1][g.player.x] != 1 {
+			g.player.y++
+		}
+		moveCooldown = g.player.moveDelay
+
+		g.player.animInstance = g.player.walky
+		g.player.animInstance.Update()
+
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
+		if g.player.x > 0 && gameMap[g.player.y][g.player.x-1] != 1 {
+			g.player.x--
+		}
+		moveCooldown = g.player.moveDelay
+
+		g.player.animInstance = g.player.walkx
+		g.player.animInstance.Update()
+
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
+		if g.player.x < mapSize-1 && gameMap[g.player.y][g.player.x+1] != 1 {
+			g.player.x++
+		}
+		moveCooldown = g.player.moveDelay
+
+		g.player.animInstance = g.player.walkx
+		g.player.animInstance.Update()
+
+	}
+	if ebiten.IsKeyPressed(ebiten.KeySpace) {
+		g.player.animInstance = g.player.melee
+		g.player.animInstance.Update()
+
+	}
+	return nil
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return screenWidth, screenHeight
+}
+
+func (g *Game) Draw(screen *ebiten.Image) {
+	g.drawMap(screen)
+	g.drawPlayer(screen)
+}
+
+func (g *Game) drawMap(screen *ebiten.Image) {
+	for y := range gameMap {
+		for x := range gameMap[y] {
+			// Get the tile index from the map grid
+			tileIndex := gameMap[y][x]
+			imageToRender := floorsImage
+			// Calculate the source rectangle for the tile
+			srcRect := image.Rect(0, 0, 16, 16)
+
+			if tileIndex != 0 {
+				srcRect = image.Rect(16, 0, 16, 16)
+				imageToRender = wallsImage
+			}
+
+			// Calculate the destination rectangle for the tile
+			dstRect := image.Rect(x*16, y*16, (x+1)*16, (y+1)*16)
+
+			opts := &ebiten.DrawImageOptions{}
+			// Translate the position for the tile
+			opts.GeoM.Translate(float64(dstRect.Min.X), float64(dstRect.Min.Y))
+			screen.DrawImage(imageToRender.SubImage(srcRect).(*ebiten.Image), opts)
+		}
+	}
+}
+
+func (g *Game) drawPlayer(screen *ebiten.Image) {
+	dstRect := image.Rect(g.player.x*16, g.player.y*16, (g.player.x+1)*16, (g.player.y+1)*16)
+
+	g.player.animInstance.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 0.5, 0.5, 0, 0))
 }
