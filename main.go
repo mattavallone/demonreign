@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"log"
 
@@ -85,8 +86,8 @@ func (g *Game) Update() error {
 			g.player.y--
 		}
 		moveCooldown = g.player.moveDelay
-
-		g.player.animInstance = g.player.walky
+		g.player.orientation = "N"
+		g.player.animInstance = g.player.walkup
 		g.player.animInstance.Update()
 
 	}
@@ -95,8 +96,9 @@ func (g *Game) Update() error {
 			g.player.y++
 		}
 		moveCooldown = g.player.moveDelay
+		g.player.orientation = "S"
 
-		g.player.animInstance = g.player.walky
+		g.player.animInstance = g.player.walkdown
 		g.player.animInstance.Update()
 
 	}
@@ -105,8 +107,9 @@ func (g *Game) Update() error {
 			g.player.x--
 		}
 		moveCooldown = g.player.moveDelay
+		g.player.orientation = "W"
 
-		g.player.animInstance = g.player.walkx
+		g.player.animInstance = g.player.walkleft
 		g.player.animInstance.Update()
 
 	}
@@ -115,13 +118,27 @@ func (g *Game) Update() error {
 			g.player.x++
 		}
 		moveCooldown = g.player.moveDelay
+		g.player.orientation = "E"
 
-		g.player.animInstance = g.player.walkx
+		g.player.animInstance = g.player.walkright
 		g.player.animInstance.Update()
 
 	}
 	if ebiten.IsKeyPressed(ebiten.KeySpace) {
-		g.player.animInstance = g.player.melee
+		switch g.player.orientation {
+		case "E":
+			g.player.animInstance = g.player.meleeright
+		case "W":
+			g.player.animInstance = g.player.meleeleft
+		case "N":
+			g.player.animInstance = g.player.meleeup
+		case "S":
+			g.player.animInstance = g.player.meleedown
+		default:
+			fmt.Printf("game.Update() - orientation not recognized")
+			g.player.animInstance = g.player.meleeright
+		}
+
 		g.player.animInstance.Update()
 
 	}
@@ -165,5 +182,5 @@ func (g *Game) drawMap(screen *ebiten.Image) {
 func (g *Game) drawPlayer(screen *ebiten.Image) {
 	dstRect := image.Rect(g.player.x*16, g.player.y*16, (g.player.x+1)*16, (g.player.y+1)*16)
 
-	g.player.animInstance.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 0.5, 0.5, 0, 0))
+	g.player.animInstance.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 1, 1, 0, 0))
 }
