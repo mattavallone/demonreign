@@ -95,7 +95,7 @@ func (g *Game) Update() error {
 		moveCooldown = g.player.moveDelay
 		g.player.orientation = "N"
 		g.player.animInstance = g.player.walkup
-		g.player.animInstance.Update()
+		g.player.animInstance.anim.Update()
 
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
@@ -106,7 +106,7 @@ func (g *Game) Update() error {
 		g.player.orientation = "S"
 
 		g.player.animInstance = g.player.walkdown
-		g.player.animInstance.Update()
+		g.player.animInstance.anim.Update()
 
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
@@ -117,7 +117,7 @@ func (g *Game) Update() error {
 		g.player.orientation = "W"
 
 		g.player.animInstance = g.player.walkleft
-		g.player.animInstance.Update()
+		g.player.animInstance.anim.Update()
 
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
@@ -128,7 +128,7 @@ func (g *Game) Update() error {
 		g.player.orientation = "E"
 
 		g.player.animInstance = g.player.walkright
-		g.player.animInstance.Update()
+		g.player.animInstance.anim.Update()
 
 	}
 	if ebiten.IsKeyPressed(ebiten.KeySpace) {
@@ -146,7 +146,7 @@ func (g *Game) Update() error {
 			g.player.animInstance = g.player.meleeright
 		}
 
-		g.player.animInstance.Update()
+		g.player.animInstance.anim.Update()
 
 	}
 	return nil
@@ -207,5 +207,5 @@ func (g *Game) drawMap(screen *ebiten.Image) {
 func (g *Game) drawPlayer(screen *ebiten.Image) {
 	dstRect := image.Rect(g.player.x*tileSize, g.player.y*tileSize, (g.player.x+1)*tileSize, (g.player.y+1)*tileSize)
 
-	g.player.animInstance.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 1, 1, 0.2, 0.2))
+	g.player.animInstance.anim.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 1, 1, g.player.animInstance.originX, g.player.animInstance.originY))
 }
