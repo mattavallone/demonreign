@@ -157,24 +157,42 @@ func (g *Game) Draw(screen *ebiten.Image) {
 func (g *Game) drawMap(screen *ebiten.Image) {
 	for y := range gameMap {
 		for x := range gameMap[y] {
-			// Get the tile index from the map grid
+			// floors
 			tileIndex := gameMap[y][x]
+
 			imageToRender := floorsImage
-			// Calculate the source rectangle for the tile
+
 			srcRect := image.Rect(0, 0, 16, 16)
-
-			if tileIndex != 0 {
-				srcRect = image.Rect(16, 0, 16, 16)
-				imageToRender = wallsImage
-			}
-
-			// Calculate the destination rectangle for the tile
 			dstRect := image.Rect(x*16, y*16, (x+1)*16, (y+1)*16)
 
 			opts := &ebiten.DrawImageOptions{}
-			// Translate the position for the tile
 			opts.GeoM.Translate(float64(dstRect.Min.X), float64(dstRect.Min.Y))
 			screen.DrawImage(imageToRender.SubImage(srcRect).(*ebiten.Image), opts)
+
+			// walls
+			if tileIndex == 1 {
+				srcRect := image.Rect(0, 0, 16, 16)
+				dstRect := image.Rect(x*16, y*16, (x+1)*16, (y+1)*16)
+
+				if (gameMap[y][x+1] == 1) && (gameMap[y+1][x] == 1) { // top left corner
+					srcRect = image.Rect(16, 0, 32, 16)
+				} else if (gameMap[y][x-1] == 1) && (gameMap[y+1][x] == 1) { // top right corner
+					srcRect = image.Rect(48, 0, 64, 16)
+				} else if (gameMap[y-1][x] == 1) && (gameMap[y][x+1] == 1) { // bottom left corner
+					srcRect = image.Rect(16, 32, 32, 48)
+				} else if (gameMap[y-1][x] == 1) && (gameMap[y][x-1] == 1) { //bottom right corner
+					srcRect = image.Rect(48, 48, 64, 64)
+				} else if (gameMap[y-1][x] == 1) && (gameMap[y+1][x] == 1) || (gameMap[y+1][x] == 1) && (gameMap[y-1][x] == 0) || (gameMap[y+1][x] == 0) && (gameMap[y-1][x] == 1) { // vertical side
+					srcRect = image.Rect(0, 0, 16, 16)
+				} else if (gameMap[y][x+1] == 1) && (gameMap[y][x-1] == 1) || (gameMap[y][x+1] == 1) && (gameMap[y][x-1] == 0) || (gameMap[y][x+1] == 0) && (gameMap[y][x-1] == 1) { // hortizontal side
+					srcRect = image.Rect(24, 48, 40, 64)
+				}
+				imageToRender := wallsImage
+
+				opts := &ebiten.DrawImageOptions{}
+				opts.GeoM.Translate(float64(dstRect.Min.X), float64(dstRect.Min.Y))
+				screen.DrawImage(imageToRender.SubImage(srcRect).(*ebiten.Image), opts)
+			}
 		}
 	}
 }
