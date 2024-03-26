@@ -180,7 +180,7 @@ func (g *Game) drawMap(screen *ebiten.Image) {
 }
 
 func (g *Game) drawPlayer(screen *ebiten.Image) {
-	dstRect := image.Rect(g.player.x*16, g.player.y*16, (g.player.x+1)*16, (g.player.y+1)*16)
+	dstRect := image.Rect(g.player.x*tileSize, g.player.y*tileSize, (g.player.x+1)*tileSize, (g.player.y+1)*tileSize)
 
 	g.player.animInstance.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 1, 1, 0.2, 0.2))
 }
