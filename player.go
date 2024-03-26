@@ -59,7 +59,7 @@ func LoadPlayerImage(p *gamePlayer) *gamePlayer {
 	p.meleeleft = ganim8.New(p.img, g32.Frames("6", "1"), 100*time.Millisecond)
 	p.meleeup = ganim8.New(p.img, gmeleeup.Frames("7", "1"), 100*time.Millisecond)
 	p.meleedown = ganim8.New(p.img, gmeleedown.Frames("5", "1"), 100*time.Millisecond)
-	p.animInstance = p.walkright
+	p.animInstance = p.walkdown
 
 	return p
 }
