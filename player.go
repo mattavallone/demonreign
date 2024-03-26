@@ -15,13 +15,12 @@ type Animation struct {
 }
 
 type gamePlayer struct {
-	x, y         int
-	img          *ebiten.Image
-	moveDelay    int
-	orientation  string
+	x, y        int
+	img         *ebiten.Image
+	moveDelay   int
+	orientation string
+
 	animInstance Animation
-	idle         Animation
-	dead         Animation
 	walkleft     Animation
 	walkright    Animation
 	walkup       Animation
@@ -44,12 +43,6 @@ func NewPlayer() *gamePlayer {
 }
 
 func LoadPlayerImage(p *gamePlayer) *gamePlayer {
-	// p.img, _, _ = ebitenutil.NewImageFromFile("assets/characters/link/link_master.png")
-	// melee_img, _, _ := ebitenutil.NewImageFromFile("assets/characters/link/link_sword2.png")
-	// idle, _, _ := ebitenutil.NewImageFromFile("assets/PixelCrawler/Heroes/Rogue/Idle/Idle-Sheet.png")
-	// run, _, _ := ebitenutil.NewImageFromFile("assets/PixelCrawler/Heroes/Rogue/Run/Run-Sheet.png")
-	// dead, _, _ := ebitenutil.NewImageFromFile("assets/PixelCrawler/Heroes/Rogue/Death/Death-Sheet.png")
-
 	p.img, _, _ = ebitenutil.NewImageFromFile("assets/characters/link/link.png")
 
 	g32 := ganim8.NewGrid(32, 32, p.img.Bounds().Dx(), p.img.Bounds().Dy(), 0, 0, 1)
