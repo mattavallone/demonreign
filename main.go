@@ -19,6 +19,7 @@ const (
 
 var (
 	moveCooldown = 0
+	iconImage    *ebiten.Image
 
 	floorsImage *ebiten.Image
 	wallsImage  *ebiten.Image
@@ -53,12 +54,18 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	img, _, _ := ebitenutil.NewImageFromFile("assets/characters/link/link.png")
+	crop := image.Rect(28, 96, 44, 115)
+	iconImage = img.SubImage(crop).(*ebiten.Image)
+
 }
 
 func main() {
 	ebiten.SetWindowSize(screenWidth*2, screenHeight*2)
 	ebiten.SetWindowTitle("Demon Reign")
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
+	ebiten.SetWindowIcon([]image.Image{iconImage})
 
 	g := &Game{
 		player: NewPlayer(),
