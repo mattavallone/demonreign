@@ -14,34 +14,14 @@ const (
 	screenWidth  = 640
 	screenHeight = 480
 	tileSize     = 16
-	mapSize      = 16
 )
 
 var (
 	moveCooldown = 0
-	iconImage    *ebiten.Image
 
+	iconImage   *ebiten.Image
 	floorsImage *ebiten.Image
 	wallsImage  *ebiten.Image
-
-	gameMap = [][]int{
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0},
-		{0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0},
-		{0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0},
-		{0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0},
-		{0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
-		{0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-		{0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
-		{0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-		{0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0},
-		{0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	}
 )
 
 func init() {
@@ -68,7 +48,8 @@ func main() {
 	ebiten.SetWindowIcon([]image.Image{iconImage})
 
 	g := &Game{
-		player: NewPlayer(),
+		player:  NewPlayer(),
+		enemies: LoadEnemies(),
 	}
 
 	LoadPlayerImage(g.player)
@@ -79,7 +60,8 @@ func main() {
 }
 
 type Game struct {
-	player *gamePlayer
+	player  *gamePlayer
+	enemies []*gameEnemy
 }
 
 func (g *Game) Update() error {
@@ -159,6 +141,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.drawMap(screen)
 	g.drawPlayer(screen)
+	g.drawEnemies(screen)
 }
 
 func (g *Game) drawMap(screen *ebiten.Image) {
@@ -208,4 +191,15 @@ func (g *Game) drawPlayer(screen *ebiten.Image) {
 	dstRect := image.Rect(g.player.x*tileSize, g.player.y*tileSize, (g.player.x+1)*tileSize, (g.player.y+1)*tileSize)
 
 	g.player.animInstance.anim.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 1, 1, g.player.animInstance.originX, g.player.animInstance.originY))
+}
+
+func (g *Game) drawEnemies(screen *ebiten.Image) {
+	scaleX := screenWidth / float64(mapSize*tileSize)
+	scaleY := screenHeight / float64(mapSize*tileSize)
+	for i := 0; i < numEnemies; i++ {
+		dstRect := image.Rect(g.enemies[i].x*tileSize, g.enemies[i].y*tileSize, (g.enemies[i].x+1)*tileSize, (g.enemies[i].y+1)*tileSize)
+
+		g.enemies[i].animInstance.anim.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 1/scaleX, 1/scaleY, g.enemies[i].animInstance.originX, g.enemies[i].animInstance.originY))
+	}
+
 }
