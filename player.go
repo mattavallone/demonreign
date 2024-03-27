@@ -8,12 +8,6 @@ import (
 	"github.com/yohamta/ganim8/v2"
 )
 
-type Animation struct {
-	anim    *ganim8.Animation
-	originX float64
-	originY float64
-}
-
 type gamePlayer struct {
 	x, y        int
 	img         *ebiten.Image
@@ -50,7 +44,7 @@ func LoadPlayerImage(p *gamePlayer) *gamePlayer {
 	gmeleedown := ganim8.NewGrid(32, 32, p.img.Bounds().Dx(), p.img.Bounds().Dy(), 4, 0, 1)
 	gmeleeup := ganim8.NewGrid(32, 32, p.img.Bounds().Dx(), p.img.Bounds().Dy(), 1, 0, 1)
 
-	p.walkleft.anim = ganim8.New(p.img, gwalk.Frames("2", "1-2"), 100*time.Millisecond)
+	p.walkleft.anim = ganim8.New(p.img, gwalk.Frames("2", "1-2"), 10*time.Millisecond)
 	p.walkleft.originX = 0.35
 	p.walkleft.originY = 0.125
 
@@ -58,27 +52,27 @@ func LoadPlayerImage(p *gamePlayer) *gamePlayer {
 	p.walkright.originX = 0.1
 	p.walkright.originY = 0.1
 
-	p.walkup.anim = ganim8.New(p.img, gwalk.Frames("3", "1-2"), 100*time.Millisecond)
+	p.walkup.anim = ganim8.New(p.img, gwalk.Frames("3", "1-2"), 10*time.Millisecond)
 	p.walkup.originX = 0.2
 	p.walkup.originY = 0.2
 
-	p.walkdown.anim = ganim8.New(p.img, gwalk.Frames("1", "1-2"), 100*time.Millisecond)
+	p.walkdown.anim = ganim8.New(p.img, gwalk.Frames("1", "1-2"), 10*time.Millisecond)
 	p.walkdown.originX = 0.4
 	p.walkdown.originY = 0.2
 
-	p.meleeright.anim = ganim8.New(p.img, g32.Frames("8", "1"), 100*time.Millisecond)
+	p.meleeright.anim = ganim8.New(p.img, g32.Frames("8", "1"), 10*time.Millisecond)
 	p.meleeright.originX = 0.1
 	p.meleeright.originY = 0.3
 
-	p.meleeleft.anim = ganim8.New(p.img, g32.Frames("6", "1"), 100*time.Millisecond)
+	p.meleeleft.anim = ganim8.New(p.img, g32.Frames("6", "1"), 10*time.Millisecond)
 	p.meleeleft.originX = 0.6
 	p.meleeleft.originY = 0.3
 
-	p.meleeup.anim = ganim8.New(p.img, gmeleeup.Frames("7", "1"), 100*time.Millisecond)
+	p.meleeup.anim = ganim8.New(p.img, gmeleeup.Frames("7", "1"), 10*time.Millisecond)
 	p.meleeup.originX = 0.3
 	p.meleeup.originY = 0.4
 
-	p.meleedown.anim = ganim8.New(p.img, gmeleedown.Frames("5", "1"), 100*time.Millisecond)
+	p.meleedown.anim = ganim8.New(p.img, gmeleedown.Frames("5", "1"), 10*time.Millisecond)
 	p.meleedown.originX = 0.4
 	p.meleedown.originY = 0.1
 
