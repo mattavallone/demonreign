@@ -69,6 +69,7 @@ func (g *Game) Update() error {
 		moveCooldown--
 		return nil
 	}
+
 	for _, nme := range g.enemies {
 		moveCooldown = nme.moveDelay
 		nme.animInstance.anim.Update()
@@ -121,12 +122,24 @@ func (g *Game) Update() error {
 		switch g.player.orientation {
 		case "E":
 			g.player.animInstance = g.player.meleeright
+			if gameMap[g.player.y][g.player.x+1] == 2 {
+				g.enemyTakeHit(g.player.x+1, g.player.y)
+			}
 		case "W":
 			g.player.animInstance = g.player.meleeleft
+			if gameMap[g.player.y][g.player.x-1] == 2 {
+				g.enemyTakeHit(g.player.x-1, g.player.y)
+			}
 		case "N":
 			g.player.animInstance = g.player.meleeup
+			if gameMap[g.player.y-1][g.player.x] == 2 {
+				g.enemyTakeHit(g.player.x, g.player.y-1)
+			}
 		case "S":
 			g.player.animInstance = g.player.meleedown
+			if gameMap[g.player.y+1][g.player.x] == 2 {
+				g.enemyTakeHit(g.player.x, g.player.y+1)
+			}
 		default:
 			fmt.Printf("game.Update() - orientation not recognized")
 			g.player.animInstance = g.player.meleeright
@@ -202,10 +215,33 @@ func (g *Game) drawPlayer(screen *ebiten.Image) {
 func (g *Game) drawEnemies(screen *ebiten.Image) {
 	scaleX := screenWidth / float64(mapSize*tileSize)
 	scaleY := screenHeight / float64(mapSize*tileSize)
-	for i := 0; i < numEnemies; i++ {
+	for i := 0; i < len(g.enemies); i++ {
 		dstRect := image.Rect(g.enemies[i].x*tileSize, g.enemies[i].y*tileSize, (g.enemies[i].x+1)*tileSize, (g.enemies[i].y+1)*tileSize)
 
 		g.enemies[i].animInstance.anim.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 1/scaleX, 1/scaleY, g.enemies[i].animInstance.originX, g.enemies[i].animInstance.originY))
 	}
 
+}
+
+func (g *Game) enemyTakeHit(x, y int) {
+	i := len(g.enemies) - 1
+	for len(g.enemies) > 0 {
+		nme := g.enemies[i]
+		fmt.Println(i)
+		if nme.x == x && nme.y == y {
+			nme.health--
+			if nme.health > 0 { // enemy still alive
+				nme.animInstance = nme.takeHit
+				nme.animInstance.anim.Update()
+			} else { // enemy is dead
+				nme.animInstance = nme.death
+				gameMap[y][x] = 0
+				nme.animInstance.anim.Update()
+				g.enemies[i] = g.enemies[len(g.enemies)-1]
+				g.enemies = g.enemies[:len(g.enemies)-1]
+			}
+			break
+		}
+		i--
+	}
 }
