@@ -69,6 +69,10 @@ func (g *Game) Update() error {
 		moveCooldown--
 		return nil
 	}
+	for _, nme := range g.enemies {
+		moveCooldown = nme.moveDelay
+		nme.animInstance.anim.Update()
+	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
 		if g.player.y > 0 && gameMap[g.player.y-1][g.player.x] != 1 {
