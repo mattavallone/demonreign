@@ -18,6 +18,7 @@ type gameEnemy struct {
 	x, y        int
 	moveDelay   int
 	orientation string
+	health      int
 
 	animInstance Animation
 	fly          Animation
@@ -32,6 +33,7 @@ func LoadEnemies() []*gameEnemy {
 		gameEnemies[i] = &gameEnemy{
 			x:           random.Intn(mapSize),
 			y:           random.Intn(mapSize),
+			health:      4,
 			moveDelay:   10,           // Adjust this value to change the speed of the player
 			orientation: direction[1], // S
 		}
