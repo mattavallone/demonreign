@@ -47,6 +47,7 @@ func (nme *gameEnemy) generateSpawnPosition() {
 		nme.y = random.Intn(mapSize)
 		nme.orientation = direction[random.Intn(4)]
 	}
+	gameMap[nme.y][nme.x] = 2 // update the map to indicate where the enemy spawns
 }
 
 func (nme *gameEnemy) LoadEnemyImage() {
