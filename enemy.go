@@ -11,7 +11,7 @@ import (
 var (
 	random     = rand.New(rand.NewSource(time.Now().UnixNano()))
 	numEnemies = random.Intn(10) + 1 // add 1 to guarantee at least one enemy spawns
-
+	direction  = []string{"N", "S", "W", "E"}
 )
 
 type gameEnemy struct {
@@ -32,19 +32,20 @@ func LoadEnemies() []*gameEnemy {
 		gameEnemies[i] = &gameEnemy{
 			x:           random.Intn(mapSize),
 			y:           random.Intn(mapSize),
-			moveDelay:   10, // Adjust this value to change the speed of the player
-			orientation: "S",
+			moveDelay:   10,           // Adjust this value to change the speed of the player
+			orientation: direction[1], // S
 		}
-		gameEnemies[i].generateSpawnCoordinates()
+		gameEnemies[i].generateSpawnPosition()
 		gameEnemies[i].LoadEnemyImage()
 	}
 	return gameEnemies
 }
 
-func (nme *gameEnemy) generateSpawnCoordinates() {
+func (nme *gameEnemy) generateSpawnPosition() {
 	for gameMap[nme.y][nme.x] == 1 {
 		nme.x = random.Intn(mapSize)
 		nme.y = random.Intn(mapSize)
+		nme.orientation = direction[random.Intn(4)]
 	}
 }
 
