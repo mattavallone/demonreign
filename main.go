@@ -176,8 +176,10 @@ func (g *Game) drawMap(screen *ebiten.Image) {
 					srcRect = image.Rect(16, 32, 32, 48)
 				} else if (gameMap[y-1][x] == 1) && (gameMap[y][x-1] == 1) { //bottom right corner
 					srcRect = image.Rect(48, 48, 64, 64)
-				} else if (gameMap[y-1][x] == 1) && (gameMap[y+1][x] == 1) || (gameMap[y+1][x] == 1) && (gameMap[y-1][x] == 0) || (gameMap[y+1][x] == 0) && (gameMap[y-1][x] == 1) { // vertical side
+				} else if (gameMap[y-1][x] == 1) && (gameMap[y+1][x] == 1) || (gameMap[y+1][x] == 1) && (gameMap[y-1][x] == 0) { // vertical side
 					srcRect = image.Rect(0, 0, 16, 16)
+				} else if (gameMap[y+1][x] == 0) && (gameMap[y-1][x] == 1) { // vertical bottom end
+					srcRect = image.Rect(0, 32, 16, 48)
 				} else if (gameMap[y][x+1] == 1) && (gameMap[y][x-1] == 1) || (gameMap[y][x+1] == 1) && (gameMap[y][x-1] == 0) || (gameMap[y][x+1] == 0) && (gameMap[y][x-1] == 1) { // hortizontal side
 					srcRect = image.Rect(24, 48, 40, 64)
 				}
