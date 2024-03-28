@@ -75,7 +75,7 @@ func (g *Game) Update() error {
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
-		if g.player.y > 0 && gameMap[g.player.y-1][g.player.x] != 1 {
+		if g.player.y > 0 && gameMap[g.player.y-1][g.player.x] < 1 {
 			g.player.y--
 		}
 		moveCooldown = g.player.moveDelay
@@ -85,7 +85,7 @@ func (g *Game) Update() error {
 
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
-		if g.player.y < mapSize-1 && gameMap[g.player.y+1][g.player.x] != 1 {
+		if g.player.y < mapSize-1 && gameMap[g.player.y+1][g.player.x] < 1 {
 			g.player.y++
 		}
 		moveCooldown = g.player.moveDelay
@@ -96,7 +96,7 @@ func (g *Game) Update() error {
 
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
-		if g.player.x > 0 && gameMap[g.player.y][g.player.x-1] != 1 {
+		if g.player.x > 0 && gameMap[g.player.y][g.player.x-1] < 1 {
 			g.player.x--
 		}
 		moveCooldown = g.player.moveDelay
@@ -107,7 +107,7 @@ func (g *Game) Update() error {
 
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
-		if g.player.x < mapSize-1 && gameMap[g.player.y][g.player.x+1] != 1 {
+		if g.player.x < mapSize-1 && gameMap[g.player.y][g.player.x+1] < 1 {
 			g.player.x++
 		}
 		moveCooldown = g.player.moveDelay
