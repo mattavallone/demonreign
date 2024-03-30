@@ -44,7 +44,7 @@ func LoadEnemies() []*gameEnemy {
 }
 
 func (nme *gameEnemy) generateSpawnPosition() {
-	for gameMap[nme.y][nme.x] == 1 {
+	for gameMap[nme.y][nme.x] != 0 { // don't spawn on other objects
 		nme.x = random.Intn(mapSize)
 		nme.y = random.Intn(mapSize)
 		nme.orientation = direction[random.Intn(4)]
