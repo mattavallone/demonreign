@@ -227,7 +227,6 @@ func (g *Game) enemyTakeHit(x, y int) {
 	i := len(g.enemies) - 1
 	for len(g.enemies) > 0 {
 		nme := g.enemies[i]
-		fmt.Println(i)
 		if nme.x == x && nme.y == y {
 			nme.health--
 			if nme.health > 0 { // enemy still alive

@@ -58,10 +58,10 @@ func (nme *gameEnemy) LoadEnemyImage() {
 	deathImg, _, _ := ebitenutil.NewImageFromFile("assets/Monsters_Creatures_Fantasy/Flying eye/Death.png")
 	takeHitImg, _, _ := ebitenutil.NewImageFromFile("assets/Monsters_Creatures_Fantasy/Flying eye/Take Hit.png")
 
-	gAttack := ganim8.NewGrid(150, 150, attackImg.Bounds().Dx(), attackImg.Bounds().Dy(), 56, 60, 1)
-	gFly := ganim8.NewGrid(150, 150, flyImg.Bounds().Dx(), flyImg.Bounds().Dy(), 56, 60, 1)
-	gDeath := ganim8.NewGrid(150, 150, deathImg.Bounds().Dx(), deathImg.Bounds().Dy(), 56, 60, 1)
-	gTakeHit := ganim8.NewGrid(150, 150, takeHitImg.Bounds().Dx(), takeHitImg.Bounds().Dy(), 56, 60, 1)
+	gAttack := ganim8.NewGrid(145, 150, attackImg.Bounds().Dx(), attackImg.Bounds().Dy(), 62, 60, 1)
+	gFly := ganim8.NewGrid(145, 150, flyImg.Bounds().Dx(), flyImg.Bounds().Dy(), 62, 60, 1)
+	gDeath := ganim8.NewGrid(145, 150, deathImg.Bounds().Dx(), deathImg.Bounds().Dy(), 62, 60, 1)
+	gTakeHit := ganim8.NewGrid(145, 150, takeHitImg.Bounds().Dx(), takeHitImg.Bounds().Dy(), 62, 60, 1)
 
 	nme.fly.anim = ganim8.New(flyImg, gFly.Frames("1-8", "1"), 10*time.Millisecond)
 	nme.fly.originX = 0
