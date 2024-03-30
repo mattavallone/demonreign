@@ -48,11 +48,13 @@ func main() {
 	ebiten.SetWindowIcon([]image.Image{iconImage})
 
 	g := &Game{
-		player:  NewPlayer(),
-		enemies: LoadEnemies(),
+		player:   NewPlayer(),
+		princess: LoadPrincess(),
+		enemies:  LoadEnemies(),
 	}
 
 	LoadPlayerImage(g.player)
+	LoadPrincessImage(g.princess)
 
 	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)
@@ -60,8 +62,9 @@ func main() {
 }
 
 type Game struct {
-	player  *gamePlayer
-	enemies []*gameEnemy
+	player   *gamePlayer
+	princess *gamePrincess
+	enemies  []*gameEnemy
 }
 
 func (g *Game) Update() error {
@@ -145,6 +148,7 @@ func (g *Game) Update() error {
 			g.player.animInstance = g.player.meleeright
 		}
 
+		gameMap[g.player.y][g.player.x] = 4
 		g.player.animInstance.anim.Update()
 
 	}
@@ -158,6 +162,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.drawMap(screen)
 	g.drawPlayer(screen)
+	g.drawPrincess(screen)
 	g.drawEnemies(screen)
 }
 
@@ -221,6 +226,15 @@ func (g *Game) drawEnemies(screen *ebiten.Image) {
 		g.enemies[i].animInstance.anim.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 1/scaleX, 1/scaleY, g.enemies[i].animInstance.originX, g.enemies[i].animInstance.originY))
 	}
 
+}
+
+func (g *Game) drawPrincess(screen *ebiten.Image) {
+	scaleX := screenWidth / float64(2.5*tileSize)
+	scaleY := screenHeight / float64(1.75*tileSize)
+
+	dstRect := image.Rect(g.princess.x*tileSize, g.princess.y*tileSize, (g.princess.x+1)*tileSize, (g.princess.y+1)*tileSize)
+
+	g.princess.animInstance.anim.Draw(screen, ganim8.DrawOpts(float64(dstRect.Min.X), float64(dstRect.Min.Y), 0, 1/scaleX, 1/scaleY, g.princess.animInstance.originX, g.princess.animInstance.originY))
 }
 
 func (g *Game) enemyTakeHit(x, y int) {
