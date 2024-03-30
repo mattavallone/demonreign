@@ -13,6 +13,7 @@ type gamePlayer struct {
 	img         *ebiten.Image
 	moveDelay   int
 	orientation string
+	health      int
 
 	animInstance Animation
 	walkleft     Animation
@@ -29,6 +30,7 @@ func NewPlayer() *gamePlayer {
 	p := &gamePlayer{
 		x:           0,
 		y:           0,
+		health:      10,
 		moveDelay:   10, // Adjust this value to change the speed of the player
 		orientation: "S",
 	}
