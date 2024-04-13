@@ -1,7 +1,9 @@
 package main
 
 import (
+	"math"
 	"math/rand"
+	"slices"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -34,7 +36,7 @@ func LoadEnemies() []*gameEnemy {
 			x:           random.Intn(mapSize),
 			y:           random.Intn(mapSize),
 			health:      4,
-			moveDelay:   10,           // Adjust this value to change the speed of the player
+			moveDelay:   10,           // Adjust this value to change the speed of the enemy
 			orientation: direction[1], // S
 		}
 		gameEnemies[i].generateSpawnPosition()
@@ -80,4 +82,26 @@ func (nme *gameEnemy) LoadEnemyImage() {
 	nme.takeHit.originY = 0
 
 	nme.animInstance = nme.fly
+}
+
+func (nme *gameEnemy) ChangeDir() {
+	i := slices.Index(direction, nme.orientation) + 1
+	if i == 4 {
+		i = 0
+	}
+	newDir := direction[i]
+	nme.orientation = newDir
+}
+
+func (nme *gameEnemy) Move() {
+	switch nme.orientation {
+	case "E":
+		nme.x = int(math.Min(float64(nme.x+1), mapSize-1))
+	case "W":
+		nme.x = int(math.Max(float64(nme.x-1), 0))
+	case "N":
+		nme.y = int(math.Max(float64(nme.y-1), 0))
+	case "S":
+		nme.y = int(math.Min(float64(nme.y+1), mapSize-1))
+	}
 }

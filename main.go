@@ -61,6 +61,32 @@ func main() {
 	}
 }
 
+func IsObjectInFront(nme *gameEnemy) bool {
+	switch nme.orientation {
+	case "E":
+
+		if nme.x == (mapSize-1) || gameMap[nme.y][nme.x+1] != 0 {
+			return true
+		}
+	case "W":
+		if nme.x == 0 || gameMap[nme.y][nme.x-1] != 0 {
+			return true
+		}
+
+	case "N":
+		if nme.y == 0 || gameMap[nme.y-1][nme.x] != 0 {
+			return true
+		}
+
+	case "S":
+		if nme.y == (mapSize-1) || gameMap[nme.y+1][nme.x] != 0 {
+			return true
+		}
+	}
+
+	return false
+}
+
 type Game struct {
 	player   *gamePlayer
 	princess *gamePrincess
@@ -73,13 +99,9 @@ func (g *Game) Update() error {
 		return nil
 	}
 
-	for _, nme := range g.enemies {
-		moveCooldown = nme.moveDelay
-		nme.animInstance.anim.Update()
-	}
-
 	if ebiten.IsKeyPressed(ebiten.KeyW) || ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
 		if g.player.y > 0 && gameMap[g.player.y-1][g.player.x] < 1 {
+			gameMap[g.player.y][g.player.x] = 0
 			g.player.y--
 		}
 		moveCooldown = g.player.moveDelay
@@ -90,6 +112,7 @@ func (g *Game) Update() error {
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyS) || ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
 		if g.player.y < mapSize-1 && gameMap[g.player.y+1][g.player.x] < 1 {
+			gameMap[g.player.y][g.player.x] = 0
 			g.player.y++
 		}
 		moveCooldown = g.player.moveDelay
@@ -101,6 +124,7 @@ func (g *Game) Update() error {
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
 		if g.player.x > 0 && gameMap[g.player.y][g.player.x-1] < 1 {
+			gameMap[g.player.y][g.player.x] = 0
 			g.player.x--
 		}
 		moveCooldown = g.player.moveDelay
@@ -112,6 +136,7 @@ func (g *Game) Update() error {
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
 		if g.player.x < mapSize-1 && gameMap[g.player.y][g.player.x+1] < 1 {
+			gameMap[g.player.y][g.player.x] = 0
 			g.player.x++
 		}
 		moveCooldown = g.player.moveDelay
@@ -121,6 +146,9 @@ func (g *Game) Update() error {
 		g.player.animInstance.anim.Update()
 
 	}
+
+	gameMap[g.player.y][g.player.x] = 4
+
 	if ebiten.IsKeyPressed(ebiten.KeySpace) {
 		switch g.player.orientation {
 		case "E":
@@ -151,7 +179,21 @@ func (g *Game) Update() error {
 		gameMap[g.player.y][g.player.x] = 4
 		g.player.animInstance.anim.Update()
 
+		return nil
+
 	}
+
+	for _, nme := range g.enemies {
+		moveCooldown = nme.moveDelay
+		for IsObjectInFront(nme) {
+			nme.ChangeDir()
+		}
+		gameMap[nme.y][nme.x] = 0
+		nme.Move()
+		gameMap[nme.y][nme.x] = 2
+		nme.animInstance.anim.Update()
+	}
+
 	return nil
 }
 
