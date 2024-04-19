@@ -87,6 +87,33 @@ func IsObjectInFront(nme *gameEnemy) bool {
 	return false
 }
 
+func drawTitle(screen *ebiten.Image) {
+	s := ebiten.DeviceScaleFactor()
+	w, _ := int(s*float64(screenWidth)), int(s*float64(screenHeight))
+
+	debugBox := image.NewRGBA(image.Rect(0, 0, w, 200))
+	overlayImg := ebiten.NewImageFromImage(debugBox)
+	opts := &ebiten.DrawImageOptions{}
+	opts.GeoM.Translate(float64(220), float64(0))
+	opts.GeoM.Scale(2, 2)
+	text := "Demon Reign"
+	ebitenutil.DebugPrint(overlayImg, text)
+	screen.DrawImage(overlayImg, opts)
+}
+
+func drawInstructions(screen *ebiten.Image) {
+	s := ebiten.DeviceScaleFactor()
+	w, _ := int(s*float64(screenWidth)), int(s*float64(screenHeight))
+
+	debugBox := image.NewRGBA(image.Rect(0, 0, w, 200))
+	overlayImg := ebiten.NewImageFromImage(debugBox)
+	opts := &ebiten.DrawImageOptions{}
+	opts.GeoM.Translate(float64(440), float64(50))
+	text := "Kill the flying beasts \nbefore they get the princess!"
+	ebitenutil.DebugPrint(overlayImg, text)
+	screen.DrawImage(overlayImg, opts)
+}
+
 type Game struct {
 	player   *gamePlayer
 	princess *gamePrincess
@@ -202,6 +229,9 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	drawTitle(screen)
+	drawInstructions(screen)
+
 	g.drawMap(screen)
 	g.drawPlayer(screen)
 	g.drawPrincess(screen)
