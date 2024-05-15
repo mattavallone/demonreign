@@ -26,11 +26,11 @@ var (
 
 func init() {
 	var err error
-	floorsImage, _, err = ebitenutil.NewImageFromFile("assets/atlas_floor-16x16.png")
+	floorsImage, _, err = ebitenutil.NewImageFromFile("assets/dungeon_tiles/atlas_floor-16x16.png")
 	if err != nil {
 		log.Fatal(err)
 	}
-	wallsImage, _, err = ebitenutil.NewImageFromFile("assets/atlas_walls_low-16x16.png")
+	wallsImage, _, err = ebitenutil.NewImageFromFile("assets/dungeon_tiles/atlas_walls_low-16x16.png")
 	if err != nil {
 		log.Fatal(err)
 	}
