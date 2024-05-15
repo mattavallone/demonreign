@@ -12,7 +12,7 @@ import (
 
 var (
 	random     = rand.New(rand.NewSource(time.Now().UnixNano()))
-	numEnemies = random.Intn(10) + 1 // add 1 to guarantee at least one enemy spawns
+	numEnemies = random.Intn(5) + 1 // add 1 to guarantee at least one enemy spawns
 	direction  = []string{"N", "S", "W", "E"}
 )
 
