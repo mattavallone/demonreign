@@ -88,7 +88,7 @@ func IsObjectInFront(nme *gameEnemy) bool {
 }
 
 func drawTitle(screen *ebiten.Image) {
-	s := ebiten.DeviceScaleFactor()
+	s := ebiten.Monitor().DeviceScaleFactor()
 	w, _ := int(s*float64(screenWidth)), int(s*float64(screenHeight))
 
 	debugBox := image.NewRGBA(image.Rect(0, 0, w, 200))
@@ -102,7 +102,7 @@ func drawTitle(screen *ebiten.Image) {
 }
 
 func drawInstructions(screen *ebiten.Image) {
-	s := ebiten.DeviceScaleFactor()
+	s := ebiten.Monitor().DeviceScaleFactor()
 	w, _ := int(s*float64(screenWidth)), int(s*float64(screenHeight))
 
 	debugBox := image.NewRGBA(image.Rect(0, 0, w, 200))
