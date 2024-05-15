@@ -180,22 +180,22 @@ func (g *Game) Update() error {
 		switch g.player.orientation {
 		case "E":
 			g.player.animInstance = g.player.meleeright
-			if gameMap[g.player.y][g.player.x+1] == 2 {
+			if g.player.x < (tileSize-1) && gameMap[g.player.y][g.player.x+1] == 2 {
 				g.enemyTakeHit(g.player.x+1, g.player.y)
 			}
 		case "W":
 			g.player.animInstance = g.player.meleeleft
-			if gameMap[g.player.y][g.player.x-1] == 2 {
+			if g.player.x > 0 && gameMap[g.player.y][g.player.x-1] == 2 {
 				g.enemyTakeHit(g.player.x-1, g.player.y)
 			}
 		case "N":
 			g.player.animInstance = g.player.meleeup
-			if gameMap[g.player.y-1][g.player.x] == 2 {
+			if g.player.y > 0 && gameMap[g.player.y-1][g.player.x] == 2 {
 				g.enemyTakeHit(g.player.x, g.player.y-1)
 			}
 		case "S":
 			g.player.animInstance = g.player.meleedown
-			if gameMap[g.player.y+1][g.player.x] == 2 {
+			if g.player.y < (tileSize-1) && gameMap[g.player.y+1][g.player.x] == 2 {
 				g.enemyTakeHit(g.player.x, g.player.y+1)
 			}
 		default:
