@@ -212,13 +212,17 @@ func (g *Game) Update() error {
 
 	for _, nme := range g.enemies {
 		moveCooldown = nme.moveDelay
-		for IsObjectInFront(nme) {
+		attempts := 0
+		for IsObjectInFront(nme) && attempts < 4 { // attempt at most 4 times (4 directions)
 			nme.ChangeDir()
+			attempts++
 		}
-		gameMap[nme.y][nme.x] = 0
-		nme.Move()
-		gameMap[nme.y][nme.x] = 2
-		nme.animInstance.anim.Update()
+		if attempts < 4 { // make sure enemy isn't trapped
+			gameMap[nme.y][nme.x] = 0
+			nme.Move()
+			gameMap[nme.y][nme.x] = 2
+			nme.animInstance.anim.Update()
+		}
 	}
 
 	return nil
